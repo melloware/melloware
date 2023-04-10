@@ -1,4 +1,6 @@
 
+https://img.shields.io/stackexchange/stackoverflow/r/502366?style=for-the-badge
+https://img.shields.io/github/followers/melloware?style=for-the-badge
 
 <!--
 ![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=melloware&theme=gruvbox_light&langs_count=3)
