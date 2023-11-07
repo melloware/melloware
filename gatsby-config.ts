@@ -20,6 +20,9 @@ const config: GatsbyConfig = {
   pathPrefix: `/melloware`,
   trailingSlash: `always`,
   plugins: [
+    `gatsby-plugin-sharp`,
+    `gatsby-transformer-sharp`,
+    `gatsby-plugin-image`,
     {
       resolve: `@lekoarts/gatsby-theme-minimal-blog`,
       // See the theme's README for all available options
@@ -64,6 +67,12 @@ const config: GatsbyConfig = {
       resolve: `gatsby-plugin-sitemap`,
       options: {
         output: `/`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `./content`,
       },
     },
     {
