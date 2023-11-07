@@ -1,0 +1,3 @@
+User-agent: *
+
+sitemap: https://melloware.com/sitemap-index.xml
