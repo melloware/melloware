@@ -11,7 +11,7 @@ const HeaderTitle = () => {
 
   return (
     <Link to={replaceSlashes(`/${basePath}`)} aria-label={`${siteTitle} - Back to home`} sx={{ color: `heading`, textDecoration: `none` }}>
-      <img alt="Melloware Home" src={`/svg/logo-no-background.svg`} height="120" width="365"></img>
+      <img alt="Melloware Home" src={replaceSlashes(`/${basePath}/svg/logo-no-background.svg`)} height="120" width="365"></img>
     </Link>
   );
 };
