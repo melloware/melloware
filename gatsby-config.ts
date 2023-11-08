@@ -17,7 +17,6 @@ const config: GatsbyConfig = {
     siteLanguage: `en`,
     author: `melloware`,
   },
-  pathPrefix: `/melloware`,
   trailingSlash: `always`,
   plugins: [
     {
