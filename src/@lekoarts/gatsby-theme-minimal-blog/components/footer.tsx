@@ -25,9 +25,9 @@ const Footer = () => {
       </div>
       <div>
         <Link aria-label="Stack Exchange reputation" href="https://stackoverflow.com/users/502366/melloware">
-          <img src="https://img.shields.io/stackexchange/stackoverflow/r/502366?style=for-the-badge"></img>
+          <img src="https://img.shields.io/stackexchange/stackoverflow/r/502366?style=for-the-badge&label=StackOverflow"></img>
         </Link>
-        <Link aria-label="GitHub followers" href="https://github.com/melloware" style={{ marginLeft: "0.5rem" }}>
+        <Link aria-label="GitHub followers" href="https://github.com/melloware">
           <img src="https://img.shields.io/github/followers/melloware?style=for-the-badge"></img>
         </Link>
       </div>
