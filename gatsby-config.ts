@@ -11,7 +11,7 @@ const config: GatsbyConfig = {
     siteTitle: `Melloware`,
     siteTitleAlt: `Melloware - Open Source Champion`,
     siteHeadline: `Melloware - Open Source Champion`,
-    siteUrl: `https://melloware.github.io/melloware/`,
+    siteUrl: `https://melloware.com/`,
     siteDescription: `Melloware has been supporting the open source community since 1999.`,
     siteImage: `/banner.jpg`,
     siteLanguage: `en`,
