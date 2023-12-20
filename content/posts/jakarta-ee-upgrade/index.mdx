@@ -6,6 +6,7 @@ tags:
   - Jakarta
   - JSF
   - Faces
+banner: ./jakarta-ee.webp
 ---
 
 While working on development projects for various clients, I often encounter the necessity to migrate legacy Java Enterprise Edition 6-8 applications
@@ -30,10 +31,13 @@ mvn -U org.openrewrite.maven:rewrite-maven-plugin:run
 
 Let us look at some of the items this recipe will automatically update for you...
 
-## Java classes/packages migration
+## Java migration
 
-Most importantly, all `javax` packages will be upgraded to their `jakarta` equivalent. As an added bonus it will update all
-bean validation messages as well.
+The first thing that needs to happen is that all Java based code needs to be migrated.
+
+- All `javax.` packages will be upgraded to their `jakarta.` equivalent
+- Bean validation messages updated to `{jakarta.validation.constraints}`
+- CDI extension file renamed to `\META-INF\services\jakarta.enterprise.inject.spi.Extension`
 
 **Java EE6 Before:**
 
