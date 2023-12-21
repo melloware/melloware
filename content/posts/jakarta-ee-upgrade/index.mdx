@@ -1,0 +1,223 @@
+---
+title: Java EE6-8 to Jakarta EE10 Upgrade
+date: 2023-12-21
+tags:
+  - Java
+  - Jakarta
+  - JSF
+  - Faces
+banner: ./jakarta-ee.webp
+---
+
+While working on development projects for various clients, I often encounter the necessity to migrate legacy Java Enterprise Edition 6-8 applications
+to the latest Jakarta Enterprise Edition 10 standard. This transition involves a considerable amount of manual and repetitive renaming tasks,
+which can be prone to errors. I was initially considering creating my own tool for the job, but I was pleased to discover
+the [OpenRewrite](https://docs.openrewrite.org/) project had all the tools I needed.
+
+Although [OpenRewrite](https://docs.openrewrite.org/) offered an impressive array of _"recipes"_ for facilitating the migration to EE10, there were certain features missing in
+the EE10 migrations that I required. Notably, there was a lack of support for JSF a.k.a Java Server Faces (now referred to as Faces) projects.
+The OpenRewrite team graciously collaborated with me to submit, curate, and accept pull requests, addressing many of the missing recipes.
+This article will delve into most of these additions.
+
+## Running the migration recipe
+
+To run the recipe from the command line, navigate to the root directory of your project and run:
+
+```shell
+mvn -U org.openrewrite.maven:rewrite-maven-plugin:run
+    -Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-migrate-java:RELEASE
+    -Drewrite.activeRecipes=org.openrewrite.java.migrate.jakarta.JakartaEE10
+```
+
+Let us look at some of the items this recipe will automatically update for you...
+
+## Java migration
+
+The first thing that needs to happen is that all Java based code needs to be migrated.
+
+- All `javax.` packages will be upgraded to their `jakarta.` equivalent
+- Bean validation messages updated to `{jakarta.validation.constraints}`
+- CDI extension file renamed to `\META-INF\services\jakarta.enterprise.inject.spi.Extension`
+
+**Java EE6 Before:**
+
+```java highlight=2-8,19-20,24-25
+import java.math.BigDecimal;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@Entity
+@Table(name = "DATA_LIMIT")
+public class DataLimit {
+
+   @Id
+   @Column(name = "DATA_LIMIT_ID")
+   private Long id;
+
+   @Column(name = "DATA_LIMIT_NAME")
+   @NotNull(message = "Data Limit Name {javax.validation.constraints.NotNull.message}")
+   @Size(max = 100, message = "Data Limit Name {javax.validation.constraints.Size.message}")
+   private String dataLimitName;
+
+   @Column(name = "MIN_VALUE")
+   @Digits(integer = 3, fraction = 3, message = "Minimum Value {javax.validation.constraints.Digits.message}")
+   @NotNull(message = "Minimum Value {javax.validation.constraints.NotNull.message}")
+   private BigDecimal minValue;
+}
+```
+
+**Jakarta EE10 After:**
+
+```java highlight=2-8,19-20,24-25
+import java.math.BigDecimal;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+@Entity
+@Table(name = "DATA_LIMIT")
+public class DataLimit {
+
+   @Id
+   @Column(name = "DATA_LIMIT_ID")
+   private Long id;
+
+   @Column(name = "DATA_LIMIT_NAME")
+   @NotNull(message = "Data Limit Name {jakarta.validation.constraints.NotNull.message}")
+   @Size(max = 100, message = "Data Limit Name {jakarta.validation.constraints.Size.message}")
+   private String dataLimitName;
+
+   @Column(name = "MIN_VALUE")
+   @Digits(integer = 3, fraction = 3, message = "Minimum Value {jakarta.validation.constraints.Digits.message}")
+   @NotNull(message = "Minimum Value {jakarta.validation.constraints.NotNull.message}")
+   private BigDecimal minValue;
+}
+```
+
+## XML schema migration
+
+The XML schemas linked to EE files, including `web.xml`, `beans.xml`, `faces-config.xml`, and others, will undergo updates to align with the Jakarta EE namespace and version.
+
+| XML File         | Version | Schema                                                            |
+| ---------------- | ------- | ----------------------------------------------------------------- |
+| web.xml          | 6.0     | https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd               |
+| web-fragment.xml | 5.0     | https://jakarta.ee/xml/ns/jakartaee/web-fragment_5_0.xsd          |
+| beans.xml        | 3.0     | https://jakarta.ee/xml/ns/jakartaee/beans_3_0.xsd                 |
+| faces-config.xml | 4.0     | https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd       |
+| faces-taglib.xml | 3.0     | https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibrary_3_0.xsd |
+| persistence.xml  | 3.0     | https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd         |
+
+Below is an example of changes that will be made to a `faces-config.xml` after the recipe has run.
+
+**Java EE6 Before:**
+
+```xml title=faces-config-1.0.xml highlight=2-4,7,8
+<faces-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1.0.xsd"
+              version="1.0">
+    <render-kit>
+        <renderer>
+            <component-family>javax.faces.Output</component-family>
+            <renderer-type>javax.faces.Head</renderer-type>
+            <renderer-class>org.apache.myfaces.renderkit.html.HtmlHeadRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+</faces-config>
+```
+
+**Jakarta EE10 After:**
+
+```xml title=faces-config-4.0.xml highlight=2-4,7,8
+<faces-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="https://jakarta.ee/xml/ns/jakartaee"
+              xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd"
+              version="4.0">
+    <render-kit>
+        <renderer>
+            <component-family>jakarta.faces.Output</component-family>
+            <renderer-type>jakarta.faces.Head</renderer-type>
+            <renderer-class>org.apache.myfaces.renderkit.html.HtmlHeadRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+</faces-config>
+```
+
+Similar changes will be made to all the XML files listed in the table above!
+
+## Faces 4.0 migration
+
+The most substantial modifications I required pertained to Faces files within the project. This encompasses the updating of all `Java`, `XHTML`, `Javascript` and `Properties` files that contain Faces-related code.
+The following list of items gets modified by the recipe:
+
+- The `jsf/ClientSideSecretKey` JNDI name has been renamed to `faces/ClientSideSecretKey`
+- Use `jakarta.el` instead of `jakarta.faces.el` and `javax.faces.el`
+- Substitutes Faces Managed Beans `javax.faces.bean`, which were deprecated in JavaServer Faces 2.3 and have been removed from Jakarta Faces 4.0 for `jakarta.enterprise.context`
+- Convert JSF to Faces values inside JavaScript,TypeScript, and Properties files such as `window.jsf` to `window.faces` and `jsf.ajax` to `faces.ajax`
+- Upgrade `PrimeFaces` to 13.x adding `<classifier>jakarta</classifier>`
+- Upgrade `OmniFaces` to 4.x and `MyFaces` to 4.x Jakarta versions
+- Convert `XHTML` pages to proper `Jakarta` namespaces and rename converters
+
+**Java EE6 Before:**
+
+```xml title=snippet-jcp.xhtml highlight=3-6,11,15
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:c="http://java.sun.com/jsp/jstl/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+<p:outputPanel id="container" layout="block">
+    <h:panelGrid columns="4">
+        <p:inputText converter="javax.faces.Long" value="#{controller.num}" />
+    </h:panelGrid>
+    <c:forEach items="#{controller.hoursOfDay}" var="hourOfDay" varStatus="status">
+        <pe:sheetcolumn headerText="#{hourOfDay}" colType="numeric">
+            <f:converter converterId="javax.faces.Integer"/>
+        </pe:sheetcolumn>
+    </c:forEach>
+</p:outputPanel>
+</ui:composition>
+```
+
+**Jakarta EE10 After:**
+
+```xml title=snippet-jakarta.xhtml highlight=3-6,11,15
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="jakarta.faces.core"
+        xmlns:h="jakarta.faces.html"
+        xmlns:ui="jakarta.faces.facelets"
+        xmlns:c="jakarta.tags.core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions">
+<p:outputPanel id="container" layout="block">
+    <h:panelGrid columns="4">
+        <p:inputText converter="jakarta.faces.Long" value="#{controller.num}" />
+    </h:panelGrid>
+    <c:forEach items="#{controller.hoursOfDay}" var="hourOfDay" varStatus="status">
+        <pe:sheetcolumn headerText="#{hourOfDay}" colType="numeric">
+            <f:converter converterId="jakarta.faces.Integer"/>
+        </pe:sheetcolumn>
+    </c:forEach>
+</p:outputPanel>
+</ui:composition>
+```
+
+## Conclusion
+
+I hope you can see that utilizing this migration recipe should save significant time for developers when transitioning a legacy Java EE app
+to a Jakarta application. Should you encounter any notable issues that fail conversion, don't hesitate to reach out to me or report the issue
+on the [OpenRewrite GitHub Issues](https://github.com/openrewrite/rewrite-migrate-java/issues) repository.
+Working together we can ensure ongoing enhancements to this recipe!
