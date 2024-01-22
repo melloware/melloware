@@ -30,6 +30,9 @@ const Footer = () => {
         <Link aria-label="GitHub followers" href="https://github.com/melloware">
           <img src="https://img.shields.io/github/followers/melloware?style=for-the-badge"></img>
         </Link>
+        <Link aria-label="GitHub sponsors" href="https://github.com/sponsors/melloware">
+          <img src="https://img.shields.io/github/sponsors/melloware?style=for-the-badge&color=gold"></img>
+        </Link>
       </div>
     </footer>
   );
