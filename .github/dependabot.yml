@@ -6,6 +6,11 @@ updates:
       interval: "monthly"
     allow:
       - dependency-type: "production"
+    groups:
+      # This is the name of your group, it will be used in PR titles and branch names
+      dependencies:
+        patterns:
+          - "gatsb*"  # or a wildcard string that matches multiple dependencies
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
