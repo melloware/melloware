@@ -1,0 +1,91 @@
+---
+title: "Quarkus Faces: Using JSF with Quarkus"
+date: 2024-04-09
+tags:
+  - Quarkus
+  - JSF
+  - Faces
+banner: ./QuarkusFaces.webp
+---
+
+![QuarkusFaces](./QuarkusFaces.webp)
+
+I have been utilizing Faces (formerly JSF) since 2011, and I have always been impressed by its capabilities, particularly its ability to
+facilitate the development of intricate applications with AJAX without requiring extensive JavaScript coding. Then, in 2019,
+while working on micro-services, I stumbled upon Quarkus and instantly became enamored with its seamless integration and user-friendly
+framework, especially given my background with Faces and Java Enterprise Edition (EE). What stood out to me was the consistency
+in annotations, unlike other micro-service frameworks that often introduce unfamiliar custom annotations. This led me to contemplate
+the possibility of merging these two technologies - leveraging the power and simplicity of Quarkus alongside the familiarity of the
+Faces UI framework.
+
+Luckily, the Apache MyFaces team beat me to it...
+
+## Apache MyFaces
+
+[Apache MyFaces](https://myfaces.apache.org/) is an implementation of the JavaServer Faces (JSF) and Jakarta Faces specification, the other major implementation being [Eclispe Mojarra](https://projects.eclipse.org/projects/ee4j.mojarra).
+Neither of these implementations will function seamlessly with Quarkus right from the start because Quarkus is not designed to be a fully compatible Enterprise Edition (EE) server, nor is it meant to be.
+The MyFaces team developed a Quarkus Extension to bridge the compatibility divide, enabling Faces to operate smoothly on Quarkus. In recent years, my efforts have been dedicated to refining this extension,
+ensuring its compatibility with GraalVM native packaging.
+
+The MyFaces Extension is the **ONLY** extension required to create a Faces application on Quarkus!
+
+```xml
+<dependency>
+  <groupId>org.apache.myfaces.core.extensions.quarkus</groupId>
+  <artifactId>myfaces-quarkus</artifactId>
+  <version>${myfaces.version}</version>
+</dependency>
+```
+
+## PrimeFaces
+
+What purpose does a UI technology serve without an exceptional collection of UI components? That is where [PrimeFaces](https://www.primefaces.org/showcase/) comes into the picture.
+You can absolutely develop a Faces application without PrimeFaces...but why would you? PrimeFaces provides an extensive selection of 100+ components that
+are pre-built with responsiveness, accessibility, and theming capabilities.
+
+Given my involvement with both PrimeFaces and PrimeFaces Extensions projects since 2014, ensuring compatibility with Quarkus has been a top priority for me.
+You can readily utilize the PrimeFaces Jakarta JAR with Quarkus, but it won't compile into a GraalVM native image by default. This is where the [Quarkus PrimeFaces Extension](https://github.com/quarkiverse/quarkus-primefaces) proves its value,
+as it equips your PrimeFaces application with everything needed to compile into a GraalVM image.
+
+```xml
+<dependency>
+    <groupId>io.quarkiverse.primefaces</groupId>
+    <artifactId>quarkus-primefaces</artifactId>
+    <version>${primefaces-quarkus.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.quarkiverse.primefaces</groupId>
+    <artifactId>quarkus-primefaces-extensions</artifactId>
+    <version>${primefaces-quarkus.version}</version>
+</dependency>
+```
+
+## OmniFaces
+
+[OmniFaces](https://omnifaces.org/) is a **utility library** for Faces that focusses on utilities that ease everyday tasks with the standard Faces API.
+OmniFaces is a response to frequently recurring problems encountered during ages of professional Faces development. OmniFaces is more geared toward "utilities"
+that solve everyday practical problems and workarounds for (small) shortcomings in the Faces API.
+
+Initially, the [AdminFaces](https://adminfaces.github.io/site/) team developed the Quarkus extension to enable OmniFaces to function with Quarkus and compile to native GraalVM.
+In 2021, I assumed responsibility for the extension and relocated it to [Quarkiverse OmniFaces](https://github.com/quarkiverse/quarkus-omnifaces), where it is currently housed.
+If you utilize OmniFaces in any capacity, this extension is indispensable for proper integration with Quarkus.
+
+```xml
+<dependency>
+    <groupId>io.quarkiverse.omnifaces</groupId>
+    <artifactId>quarkus-omnifaces</artifactId>
+    <version>${omnifaces.version}</version>
+</dependency>
+```
+
+## Putting it all together
+
+In order to demonstrate all the libraries and functionalities discussed in this post, I required an application to thoroughly test them.
+I chose to develop the [QuarkusFaces](https://github.com/melloware/quarkus-faces) application to serve as a comprehensive showcase of the
+combined features of MyFaces, OmniFaces, and PrimeFaces, while also ensuring that all functionalities operate seamlessly in GraalVM mode.
+
+QuarkusFaces adopts the PrimeFaces Showcase application and executes it within the Quarkus environment. This approach facilitated the
+debugging of numerous GraalVM issues and enabled me to address reported bugs from users effectively. Additionally, it serves as an example
+for users seeking to commence their journey with Quarkus and Faces but are uncertain where to start. Users can utilize this application as
+a template, removing unnecessary pages and swiftly develop their own Faces application. QuarkusFaces also incorporates
+numerous best practices and performance recommendations tailored for a Faces application.
