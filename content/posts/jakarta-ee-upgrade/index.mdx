@@ -169,7 +169,7 @@ The following list of items gets modified by the recipe:
 
 **Java EE6 Before:**
 
-```xml title=snippet-jcp.xhtml highlight=3-6,11,15
+```xml title=snippet-jcp.xhtml highlight=3-8,11,15
 <ui:composition
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:f="http://java.sun.com/jsf/core"
@@ -193,15 +193,15 @@ The following list of items gets modified by the recipe:
 
 **Jakarta EE10 After:**
 
-```xml title=snippet-jakarta.xhtml highlight=3-6,11,15
+```xml title=snippet-jakarta.xhtml highlight=3-8,11,15
 <ui:composition
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:f="jakarta.faces.core"
         xmlns:h="jakarta.faces.html"
         xmlns:ui="jakarta.faces.facelets"
         xmlns:c="jakarta.tags.core"
-        xmlns:p="http://primefaces.org/ui"
-        xmlns:pe="http://primefaces.org/ui/extensions">
+        xmlns:p="primefaces"
+        xmlns:pe="primefaces.extensions">
 <p:outputPanel id="container" layout="block">
     <h:panelGrid columns="4">
         <p:inputText converter="jakarta.faces.Long" value="#{controller.num}" />
