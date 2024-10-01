@@ -1,5 +1,5 @@
-import type { GatsbyConfig, PluginRef } from "gatsby";
 import "dotenv/config";
+import type { GatsbyConfig, PluginRef } from "gatsby";
 
 const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE;
 
@@ -24,7 +24,7 @@ const config: GatsbyConfig = {
       // See the theme's README for all available options
       options: {
         showLineNumbers: true,
-        formatString: "MM.DD.YYYY",
+        formatString: "LL",
         navigation: [
           {
             title: `Projects`,
