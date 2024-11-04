@@ -1,0 +1,43 @@
+---
+title: "Quarkus Faces: Uber-Jar Support!"
+date: 2024-11-04
+tags:
+  - Quarkus
+  - JSF
+  - Faces
+  - MyFaces
+  - Uber-Jar
+banner: ./QuarkusFaces.webp
+---
+
+![QuarkusFaces](./QuarkusFaces.webp)
+
+An Uber-JAR, also known as a fat JAR or JAR with dependencies, is a Java Archive (JAR) file that contains a Java program and its dependencies. This means that the Uber-JAR functions as a single distribution of the software, without requiring any additional Java code. 
+Here are some advantages of Uber-JARs:
+* **Portability**: Uber-JARs are portable. 
+* **Ease of execution**: Uber-JARs are easy to execute in IDEs. 
+* **All-in-one**: Uber-JARs are all-in-one distributions of software. 
+
+Quarkus offers the ability to build Uber-JARs by adding `quarkus.package.type=uber-jar` to your `application.properties` file.
+
+QuarkusFaces users have been unable to build Uber-JARs due to MyFaces' lack of support for the `quarkus.package.type=uber-jar` property. 
+In 2022, a MyFaces ticket was opened to address this limitation: [MYFACES-4427](https://issues.apache.org/jira/browse/MYFACES-4427). 
+This has been a significant pain point for users looking to distribute their Faces applications as a single file.
+
+
+## The Issue
+
+The main challenge is that Java EE applications can include multiple `web-fragment.xml` and `faces-config.xml` files, while an Uber-JAR only supports one of each. 
+To build a functional Uber-JAR, these files must be merged into a single, unified configuration. Additionally, all ServiceLoader resources, also known as SPI files, 
+must be merged as well. Examples of SPI files include `service/javax.servlet.ServletContainerInitializer` and `services/jakarta.el.ExpressionFactory`.
+
+
+## The Solution
+
+Apache MyFaces 4.1.0-RC3 has [added support](https://github.com/apache/myfaces/blob/main/extensions/quarkus/deployment/src/main/java/org/apache/myfaces/core/extensions/quarkus/deployment/FacesUberJarProcessor.java) to merge all of the above files properly so the final Uber-JAR will have the correct configuration.
+Now you can build and run your Faces application as an Uber-JAR with the following command:
+
+```bash
+mvn clean package -Dquarkus.package.type=uber-jar
+java -jar target/mapp-1.0-SNAPSHOT-runner.jar
+```
