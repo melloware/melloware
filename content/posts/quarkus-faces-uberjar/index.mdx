@@ -18,9 +18,9 @@ Here are some advantages of Uber-JARs:
 * **Ease of execution**: Uber-JARs are easy to execute in IDEs. 
 * **All-in-one**: Uber-JARs are all-in-one distributions of software. 
 
-Quarkus offers the ability to build Uber-JARs by adding `quarkus.package.type=uber-jar` to your `application.properties` file.
+Quarkus offers the ability to build Uber-JARs by adding `quarkus.package.jar.type=uber-jar` to your `application.properties` file.
 
-QuarkusFaces users have been unable to build Uber-JARs due to MyFaces' lack of support for the `quarkus.package.type=uber-jar` property. 
+QuarkusFaces users have been unable to build Uber-JARs due to MyFaces' lack of support for the `quarkus.package.jar.type=uber-jar` property. 
 In 2022, a MyFaces ticket was opened to address this limitation: [MYFACES-4427](https://issues.apache.org/jira/browse/MYFACES-4427). 
 This has been a significant pain point for users looking to distribute their Faces applications as a single file.
 
@@ -39,5 +39,5 @@ Now you can build and run your Faces application as an Uber-JAR with the followi
 
 ```bash
 mvn clean package -Dquarkus.package.jar.type=uber-jar
-java -jar target/mapp-1.0-SNAPSHOT-runner.jar
+java -jar target/myapp-1.0-SNAPSHOT-runner.jar
 ```
