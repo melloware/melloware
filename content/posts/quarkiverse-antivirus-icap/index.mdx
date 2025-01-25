@@ -1,0 +1,84 @@
+---
+title: "ICAP Support in Quarkiverse Antivirus"
+date: 2025-01-26
+tags:
+  - Quarkus
+  - Extension
+  - Antivirus
+---
+
+We're thrilled to announce a significant enhancement to the [Quarkiverse Antivirus extension](https://github.com/quarkiverse/quarkus-antivirus): it now supports the Internet Content Adaptation Protocol (ICAP)! This new feature has been made possible thanks to the powerful [Toolarium ICAP Client](https://github.com/toolarium/toolarium-icap-client), enabling seamless integration with ICAP-compliant antivirus solutions.
+
+### What Is ICAP?
+
+The Internet Content Adaptation Protocol (ICAP) is a lightweight HTTP-like protocol designed to offload content adaptation tasks, such as antivirus scanning or content filtering, to dedicated servers. By leveraging ICAP, organizations can:
+
+- **Improve scalability** by centralizing content scanning.
+- **Ensure consistency** in malware detection and policy enforcement.
+- **Enhance performance** by offloading resource-intensive scanning from application servers.
+
+### Why Add ICAP Support?
+
+Modern enterprises often rely on ICAP servers to integrate robust antivirus scanning capabilities across their systems. By supporting ICAP, the Quarkiverse Antivirus extension empowers Quarkus developers to:
+
+- Connect to any ICAP-compliant antivirus solution seamlessly.
+- Perform real-time file or content scanning as part of their applications.
+- Meet stringent security and compliance requirements efficiently.
+
+### Introducing the Toolarium ICAP Client
+
+The [Toolarium ICAP Client](https://github.com/toolarium/toolarium-icap-client) is an open-source Java library designed for effortless integration with ICAP servers. With its lightweight footprint and intuitive API, the Toolarium ICAP Client has been instrumental in enabling ICAP support in the Quarkiverse Antivirus extension. It offers:
+
+- **Ease of use:** Simple APIs for sending and receiving ICAP requests.
+- **Flexibility:** Support for various ICAP operations like file scanning and content modification.
+- **Reliability:** A robust and actively maintained codebase.
+
+### How to Use the New ICAP Feature
+
+Here's a quick overview of how you can leverage ICAP in your Quarkus application using the updated Antivirus extension:
+
+1. **Add the Quarkiverse Antivirus Extension**
+   Include the extension in your Quarkus project:
+   ```bash
+   ./mvnw quarkus:add-extension -Dextensions="io.quarkiverse.antivirus"
+   ```
+  
+2. **Configure ICAP Server Details**
+   Specify your ICAP server settings in the `application.properties` file:
+   ```properties
+   quarkus.antivirus.icap.host=icap.example.com
+   quarkus.antivirus.icap.port=1344
+   quarkus.antivirus.icap.service=avscan
+   ```
+3. **Integrate Scanning in Your Application**
+   Use the provided API to scan files or content within your Quarkus application:
+   ```java
+   @Inject
+   Antivirus antivirus;
+   @PUT
+   @Consumes(MediaType.MULTIPART_FORM_DATA)
+   @Produces(MediaType.TEXT_PLAIN)
+   @Path("/upload")
+   public Response upload(@MultipartForm @Valid final UploadRequest fileUploadRequest) {
+       final String fileName = fileUploadRequest.getFileName();
+       final InputStream data = fileUploadRequest.getData();
+       try {
+           // copy the stream to make it resettable
+           final ByteArrayInputStream inputStream = new ByteArrayInputStream(
+                   IOUtils.toBufferedInputStream(data).readAllBytes());
+           // scan the file and check the results
+           List<AntivirusScanResult> results = antivirus.scan(fileName, inputStream);
+           for (AntivirusScanResult result : results) {
+               if (result.getStatus() != Response.Status.OK.getStatusCode()) {
+                   throw new WebApplicationException(result.getMessage(), result.getStatus());
+               }
+           }
+           // write the file out to disk
+           final File tempFile = File.createTempFile("fileName", "tmp");
+           IOUtils.copy(inputStream, new FileOutputStream(tempFile));
+       } catch (IOException e) {
+           throw new BadRequestException(e);
+       }
+       return Response.ok().build();
+   }
+   ```
