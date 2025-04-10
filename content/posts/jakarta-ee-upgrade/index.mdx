@@ -215,6 +215,18 @@ The following list of items gets modified by the recipe:
 </ui:composition>
 ```
 
+### Composite Components and `#{cc.clientId}`
+
+In Java EE 8, it was common to set `id="#{cc.clientId}"` on JSF components inside composite components to ensure
+the rendered markup had a predictable client ID for AJAX updates. This was a workaround due to the lack of
+automatically rendered container elements.
+
+In EE 10 / Jakarta Faces 4+, this is invalid. Component IDs must be simple literals.
+Using `#{cc.clientId}` in id will now throw an `IllegalArgumentException`.
+
+Use a fixed ID like `id="wrapper"` inside the composite, and update the component via its client ID
+(e.g., `update="formId:compositeId"`).
+
 ## Conclusion
 
 I hope you can see that utilizing this migration recipe should save significant time for developers when transitioning a legacy Java EE app
