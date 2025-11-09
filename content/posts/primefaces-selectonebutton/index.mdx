@@ -1,108 +1,184 @@
 ---
-title: "PrimeFaces SelectOneButton and SelectManyButton Custom Behaviors"
-date: 2025-11-09
+title: "PrimeFaces SelectOneButton and SelectManyButton Custom Rendering"
+date: 2025-01-26
 tags:
   - PrimeFaces
   - JSF
   - Faces
 ---
 
-PrimeFaces 15.0.10 introduces a significant enhancement to the `SelectOneButton` and `SelectManyButton` components: support for custom behaviors via the `p:ajax` tag. This new feature enables developers to attach AJAX behaviors to these components, providing greater flexibility and interactivity within applications.
+PrimeFaces 15.0.10 introduces a significant enhancement to the `SelectOneButton` and `SelectManyButton` components: support for custom rendering. This new feature enables developers to completely customize the appearance and content of button options, including the ability to add badges, icons, and other custom elements, providing greater flexibility in designing user interfaces.
 
-## What Are Custom Behaviors?
+## What Is Custom Rendering?
 
-Custom behaviors allow you to define client-side scripts and server-side listeners that execute in response to specific component events. With the addition of `p:ajax` support, `SelectOneButton` and `SelectManyButton` can now participate in AJAX-based interactions, enabling dynamic updates without full-page refreshes.
+Custom rendering allows you to define custom HTML structure for each button option using the `custom` facet. Instead of being limited to simple text labels, you can now create fully customized button layouts with any HTML elements, JSF components, or PrimeFaces components like badges. This feature provides complete control over how each option is displayed.
 
-## SelectOneButton with Custom Behaviors
+## Custom Layout Using Facet
 
-The `SelectOneButton` component now supports the `change` event, which is triggered when the user selects a different option. Here's an example of how to use this feature:
+The most straightforward approach is to use the `custom` facet directly within the component. You define one custom button element for each `f:selectItem`, and each custom button must have `role="radio"` and `tabindex` attributes for proper accessibility and functionality.
+
+Here's an example that demonstrates custom rendering with color indicators and badges:
 
 ```xml
-<p:selectOneButton value="#{bean.selectedOption}">
-    <f:selectItem itemLabel="Option 1" itemValue="1" />
-    <f:selectItem itemLabel="Option 2" itemValue="2" />
-    <f:selectItem itemLabel="Option 3" itemValue="3" />
-    <p:ajax event="change" listener="#{bean.handleChange}" update="outputPanel" />
-</p:selectOneButton>
+<p:selectOneButton id="customButton" value="#{selectOneButtonView.color}">
+    <p:ajax event="change" listener="#{selectOneButtonView.onChange}" />
+    
+    <f:selectItem itemLabel="Red" itemValue="Red"/>
+    <f:selectItem itemLabel="Green" itemValue="Green"/>
+    <f:selectItem itemLabel="Blue" itemValue="Blue"/>
 
-<h:panelGroup id="outputPanel">
-    <h:outputText value="Selected Option: #{bean.selectedOption}" />
-</h:panelGroup>
+    <f:facet name="custom">
+        <div class="custom-button" role="radio" tabindex="0">
+            <span class="legend" style="background:red; display:inline-block; width:1rem; height:1rem; border-radius:0.25rem; vertical-align:middle; margin-right:0.5rem;"/> Red
+        </div>
+        <div class="custom-button" role="radio" tabindex="0">
+            <span class="legend" style="background:green; display:inline-block; width:1rem; height:1rem; border-radius:0.25rem; vertical-align:middle; margin-right:0.5rem;"/> Green
+        </div>
+        <p:badge icon="pi pi-bell" severity="info" iconPos="left">
+            <div class="custom-button" role="radio" tabindex="0">
+                <span class="legend" style="background:blue; display:inline-block; width:1rem; height:1rem; border-radius:0.25rem; vertical-align:middle; margin-right:0.5rem;"/> Blue
+            </div>
+        </p:badge>
+    </f:facet>
+</p:selectOneButton>
 ```
 
-In this example, when the user selects a different option, the `handleChange` method in the backing bean is invoked, and the `outputPanel` is updated to reflect the selected option.
+In this example, each button option displays a colored legend indicator along with its label. The third option (Blue) is wrapped in a `p:badge` component to demonstrate how badges can be integrated with custom rendering.
 
-## SelectManyButton with Custom Behaviors
+## Custom Layout Using Referenced Elements
 
-Similarly, `SelectManyButton` also supports the `change` event for handling multiple selections:
+For more complex layouts or when you need to separate the button definitions from the component, you can use the `layout="custom"` attribute and define the custom buttons outside the component. The buttons are matched to the `f:selectItem` elements by their order.
+
+Here's an example demonstrating a payment method selector with icons and detailed information:
+
+```xml
+<div id="customButton2Container">
+    <p:selectOneButton id="customButton2" value="#{selectOneButtonView.paymentMethod}" layout="custom">
+        <p:ajax event="change" listener="#{selectOneButtonView.onChange}" />
+
+        <f:selectItem itemLabel="PayPal" itemValue="PayPal"/>
+        <f:selectItem itemLabel="Bitcoin" itemValue="Bitcoin"/>
+        <f:selectItem itemLabel="Credit Card" itemValue="Credit Card" itemDisabled="true"/>
+        <f:selectItem itemLabel="Cash" itemValue="Cash"/>
+    </p:selectOneButton>
+
+    <div class="flex flex-wrap justify-content-start mt-3">
+        <div class="payment-button paypal" role="radio" tabindex="0">
+            <i class="pi pi-paypal payment-icon"></i>
+            <div class="payment-title">PayPal</div>
+            <div class="payment-tagline">Secure online payment</div>
+        </div>
+        <div class="payment-button bitcoin" role="radio" tabindex="0">
+            <i class="pi pi-bitcoin payment-icon"></i>
+            <div class="payment-title">Bitcoin</div>
+            <div class="payment-tagline">Cryptocurrency payment</div>
+        </div>
+        <div class="payment-button creditcard ui-state-disabled" role="radio" tabindex="-1">
+            <i class="pi pi-credit-card payment-icon"></i>
+            <div class="payment-title">Credit Card</div>
+            <div class="payment-tagline">Currently unavailable</div>
+        </div>
+        <div class="payment-button cash" role="radio" tabindex="0">
+            <i class="pi pi-money-bill payment-icon"></i>
+            <div class="payment-title">Cash</div>
+            <div class="payment-tagline">Pay on delivery</div>
+        </div>
+    </div>
+</div>
+```
+
+This approach allows for more complex layouts with multiple elements per button, such as icons, titles, and taglines. Note that disabled items should have `tabindex="-1"` and the `ui-state-disabled` class.
+
+## Key Requirements for Custom Rendering
+
+When implementing custom rendering, keep these requirements in mind:
+
+1. **One custom button per selectItem**: Each `f:selectItem` must have a corresponding custom button element in the `custom` facet or in the referenced container.
+
+2. **Required attributes**: Each custom button must have:
+   - `role="radio"` for accessibility
+   - `tabindex="0"` for enabled items (or `tabindex="-1"` for disabled items)
+
+3. **Order matters**: The order of custom buttons must match the order of `f:selectItem` elements.
+
+4. **Badge integration**: Badges can wrap custom button elements or be included within them, as shown in the first example.
+
+## SelectManyButton with Custom Rendering
+
+The `SelectManyButton` component supports the same custom rendering features. You can use either the `custom` facet or the `layout="custom"` approach:
 
 ```xml
 <p:selectManyButton value="#{bean.selectedOptions}">
-    <f:selectItem itemLabel="Option 1" itemValue="1" />
-    <f:selectItem itemLabel="Option 2" itemValue="2" />
-    <f:selectItem itemLabel="Option 3" itemValue="3" />
-    <p:ajax event="change" listener="#{bean.handleChange}" update="outputPanel" />
+    <f:selectItem itemLabel="Option A" itemValue="A" />
+    <f:selectItem itemLabel="Option B" itemValue="B" />
+    <f:selectItem itemLabel="Option C" itemValue="C" />
+    
+    <f:facet name="custom">
+        <div class="custom-button" role="checkbox" tabindex="0">
+            <p:badge value="3" severity="success" />
+            <span>Option A</span>
+        </div>
+        <div class="custom-button" role="checkbox" tabindex="0">
+            <p:badge value="5" severity="warning" />
+            <span>Option B</span>
+        </div>
+        <div class="custom-button" role="checkbox" tabindex="0">
+            <span>Option C</span>
+        </div>
+    </f:facet>
 </p:selectManyButton>
-
-<h:panelGroup id="outputPanel">
-    <h:outputText value="Selected Options: #{bean.selectedOptions}" />
-</h:panelGroup>
 ```
+
+Note that for `SelectManyButton`, the role should be `"checkbox"` instead of `"radio"`.
 
 ## Backing Bean Example
 
-Here's a simple backing bean implementation to handle the change event:
+Here's a simple backing bean that can support custom rendering:
 
 ```java
 @Named
 @ViewScoped
-public class ButtonBean implements Serializable {
-    private String selectedOption;
-    private List<String> selectedOptions;
+public class SelectOneButtonView implements Serializable {
+    private String color;
+    private String paymentMethod;
 
-    public void handleChange(AjaxBehaviorEvent event) {
+    public void onChange(AjaxBehaviorEvent event) {
         // Handle the change event
         // You can access the component and perform any necessary logic
     }
 
     // Getters and setters
-    public String getSelectedOption() {
-        return selectedOption;
+    public String getColor() {
+        return color;
     }
 
-    public void setSelectedOption(String selectedOption) {
-        this.selectedOption = selectedOption;
+    public void setColor(String color) {
+        this.color = color;
     }
 
-    public List<String> getSelectedOptions() {
-        return selectedOptions;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setSelectedOptions(List<String> selectedOptions) {
-        this.selectedOptions = selectedOptions;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }
 ```
 
 ## Benefits
 
-The addition of custom behaviors to `SelectOneButton` and `SelectManyButton` provides several advantages:
+The addition of custom rendering to `SelectOneButton` and `SelectManyButton` provides several advantages:
 
-- **Enhanced User Experience**: Immediate feedback and dynamic updates without full-page reloads improve the responsiveness of your application.
-- **Improved Performance**: By processing only necessary components via AJAX, you can reduce server load and improve overall application performance.
-- **Greater Flexibility**: The ability to define complex client-side interactions tailored to your application's specific needs.
-- **Simplified Development**: Handle events directly within the component, reducing the need for additional JavaScript code and leading to cleaner, more maintainable codebases.
-- **Badge Support**: Adding badges to buttons, a frequently requested feature, is now possible through custom rendering.
-
-## Available Events
-
-Currently, both components support the following event:
-
-- **change**: Triggered when the selection changes (for `SelectOneButton`) or when selections are modified (for `SelectManyButton`).
+- **Complete Design Control**: Create fully customized button layouts that match your application's design requirements and branding.
+- **Badge Support**: Adding badges to buttons, a frequently requested feature, is now possible through custom rendering. Display counts, status indicators, or any other contextual information.
+- **Rich Content**: Include icons, images, multiple text elements, or any other HTML/JSF components within button options.
+- **Improved User Experience**: Provide users with more context and visual cues directly within the button options, making interfaces more intuitive and engaging.
+- **Flexible Layouts**: Choose between inline facet-based rendering or referenced external layouts depending on your needs.
 
 ## Conclusion
 
-The custom behaviors feature in PrimeFaces 15.0.10 makes `SelectOneButton` and `SelectManyButton` more powerful and flexible components. By leveraging the `p:ajax` tag, developers can create more interactive and responsive user interfaces with minimal effort.
+The custom rendering feature in PrimeFaces 15.0.10 makes `SelectOneButton` and `SelectManyButton` more powerful and flexible components. By leveraging the `custom` facet or `layout="custom"` attribute, developers can create visually rich and informative user interfaces that go far beyond simple text labels. Whether you need to add badges, icons, complex layouts, or other custom content, custom rendering provides the flexibility to tailor these components to your specific needs.
 
 For more detailed information and additional configuration options, refer to the official PrimeFaces documentation:
 
