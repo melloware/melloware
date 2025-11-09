@@ -1,0 +1,110 @@
+---
+title: "PrimeFaces SelectOneButton and SelectManyButton Custom Behaviors"
+date: 2025-11-09
+tags:
+  - PrimeFaces
+  - JSF
+  - Faces
+---
+
+PrimeFaces 15.0.10 introduces a significant enhancement to the `SelectOneButton` and `SelectManyButton` components: support for custom behaviors via the `p:ajax` tag. This new feature enables developers to attach AJAX behaviors to these components, providing greater flexibility and interactivity within applications.
+
+## What Are Custom Behaviors?
+
+Custom behaviors allow you to define client-side scripts and server-side listeners that execute in response to specific component events. With the addition of `p:ajax` support, `SelectOneButton` and `SelectManyButton` can now participate in AJAX-based interactions, enabling dynamic updates without full-page refreshes.
+
+## SelectOneButton with Custom Behaviors
+
+The `SelectOneButton` component now supports the `change` event, which is triggered when the user selects a different option. Here's an example of how to use this feature:
+
+```xml
+<p:selectOneButton value="#{bean.selectedOption}">
+    <f:selectItem itemLabel="Option 1" itemValue="1" />
+    <f:selectItem itemLabel="Option 2" itemValue="2" />
+    <f:selectItem itemLabel="Option 3" itemValue="3" />
+    <p:ajax event="change" listener="#{bean.handleChange}" update="outputPanel" />
+</p:selectOneButton>
+
+<h:panelGroup id="outputPanel">
+    <h:outputText value="Selected Option: #{bean.selectedOption}" />
+</h:panelGroup>
+```
+
+In this example, when the user selects a different option, the `handleChange` method in the backing bean is invoked, and the `outputPanel` is updated to reflect the selected option.
+
+## SelectManyButton with Custom Behaviors
+
+Similarly, `SelectManyButton` also supports the `change` event for handling multiple selections:
+
+```xml
+<p:selectManyButton value="#{bean.selectedOptions}">
+    <f:selectItem itemLabel="Option 1" itemValue="1" />
+    <f:selectItem itemLabel="Option 2" itemValue="2" />
+    <f:selectItem itemLabel="Option 3" itemValue="3" />
+    <p:ajax event="change" listener="#{bean.handleChange}" update="outputPanel" />
+</p:selectManyButton>
+
+<h:panelGroup id="outputPanel">
+    <h:outputText value="Selected Options: #{bean.selectedOptions}" />
+</h:panelGroup>
+```
+
+## Backing Bean Example
+
+Here's a simple backing bean implementation to handle the change event:
+
+```java
+@Named
+@ViewScoped
+public class ButtonBean implements Serializable {
+    private String selectedOption;
+    private List<String> selectedOptions;
+
+    public void handleChange(AjaxBehaviorEvent event) {
+        // Handle the change event
+        // You can access the component and perform any necessary logic
+    }
+
+    // Getters and setters
+    public String getSelectedOption() {
+        return selectedOption;
+    }
+
+    public void setSelectedOption(String selectedOption) {
+        this.selectedOption = selectedOption;
+    }
+
+    public List<String> getSelectedOptions() {
+        return selectedOptions;
+    }
+
+    public void setSelectedOptions(List<String> selectedOptions) {
+        this.selectedOptions = selectedOptions;
+    }
+}
+```
+
+## Benefits
+
+The addition of custom behaviors to `SelectOneButton` and `SelectManyButton` provides several advantages:
+
+- **Enhanced User Experience**: Immediate feedback and dynamic updates without full-page reloads improve the responsiveness of your application.
+- **Improved Performance**: By processing only necessary components via AJAX, you can reduce server load and improve overall application performance.
+- **Greater Flexibility**: The ability to define complex client-side interactions tailored to your application's specific needs.
+- **Simplified Development**: Handle events directly within the component, reducing the need for additional JavaScript code and leading to cleaner, more maintainable codebases.
+- **Badge Support**: Adding badges to buttons, a frequently requested feature, is now possible through custom rendering.
+
+## Available Events
+
+Currently, both components support the following event:
+
+- **change**: Triggered when the selection changes (for `SelectOneButton`) or when selections are modified (for `SelectManyButton`).
+
+## Conclusion
+
+The custom behaviors feature in PrimeFaces 15.0.10 makes `SelectOneButton` and `SelectManyButton` more powerful and flexible components. By leveraging the `p:ajax` tag, developers can create more interactive and responsive user interfaces with minimal effort.
+
+For more detailed information and additional configuration options, refer to the official PrimeFaces documentation:
+
+- [SelectOneButton](https://primefaces.github.io/primefaces/16_0_0/#/components/selectonebutton)
+- [SelectManyButton](https://primefaces.github.io/primefaces/16_0_0/#/components/selectmanybutton)
