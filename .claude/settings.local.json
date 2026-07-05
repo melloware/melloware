@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir C:\\\\dev\\\\melloware\\\\melloware-website *)",
+      "PowerShell(Head *)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\dev\\\\melloware\\\\melloware\" -Force | Where-Object {$_.Name -notmatch \"^node_modules|^\\\\.cache|^\\\\.git\"} | Select-Object Name)",
+      "PowerShell(Get-ChildItem \"C:\\\\dev\\\\melloware\\\\melloware\\\\content\\\\posts\" -Recurse | Where-Object { -not $_.PSIsContainer } | Select-Object FullName)",
+      "PowerShell(Rename-Item *)",
+      "PowerShell(npm view *)"
+    ]
+  }
+}
