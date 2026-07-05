@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+function slugFromId(id: string): string {
+  return id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
+}
+---
+
+<BaseLayout title="Blog" description="Articles about open source, Java, Quarkus, React and more.">
+  <h1>Blog</h1>
+  <p class="subtitle">{posts.length} articles about open source, Java, Quarkus, React, and more.</p>
+  {posts.map(post => (
+    <PostCard
+      title={post.data.title}
+      date={post.data.date}
+      tags={post.data.tags}
+      slug={slugFromId(post.id)}
+      description={post.data.description}
+    />
+  ))}
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: 0.35rem;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+</style>

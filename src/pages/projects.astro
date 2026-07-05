@@ -1,0 +1,166 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const projects = [
+  {
+    name: 'PrimeFaces',
+    logo: '/projects/primefaces.svg',
+    href: 'https://github.com/primefaces/primefaces',
+    description:
+      'One of the most popular UI libraries in the Java EE Ecosystem, widely used by software companies, world renowned brands, banks, financial institutions, insurance companies, universities and more.',
+  },
+  {
+    name: 'PrimeReact',
+    logo: '/projects/primereact.svg',
+    href: 'https://github.com/primefaces/primereact',
+    description: 'The most complete React UI component library.',
+  },
+  {
+    name: 'MyFaces',
+    logo: '/projects/apache.webp',
+    href: 'https://github.com/apache/myfaces',
+    description:
+      "Apache's implementation of the JavaServer Faces (JSF) and Jakarta Faces specification.",
+  },
+  {
+    name: 'PrimeFaces Extensions',
+    logo: '/projects/pf-extensions.svg',
+    href: 'https://github.com/primefaces-extensions/primefaces-extensions',
+    description:
+      'A community driven open source project which has an aim to be a lightweight and fast Faces component and utility library in addition to PrimeFaces.',
+  },
+  {
+    name: 'Quarkus',
+    logo: '/projects/quarkus.svg',
+    href: 'https://quarkus.io/',
+    description:
+      'A Kubernetes Native Java stack tailored for OpenJDK HotSpot and GraalVM, crafted from the best of breed Java libraries and standards.',
+  },
+  {
+    name: 'Quarkus Faces',
+    logo: '/projects/quarkiverse.webp',
+    href: 'https://github.com/melloware/quarkus-faces',
+    description:
+      'Reference application for running a Faces webapp on Quarkus using Quarkus PrimeFaces and Quarkus OmniFaces.',
+  },
+  {
+    name: 'Quarkus Quinoa',
+    logo: '/projects/npm.svg',
+    href: 'https://github.com/quarkiverse/quarkus-quinoa',
+    description:
+      'A Quarkus extension which eases the development, build and serving of single page apps (built with NPM: React, Angular, …) alongside Quarkus.',
+  },
+  {
+    name: 'Quarkus Mailpit',
+    logo: '/projects/mailpit.svg',
+    href: 'https://github.com/quarkiverse/quarkus-mailpit',
+    description:
+      'A Quarkus extension that lets you utilize Mailpit as a DevService for the Quarkus Mailer enabling zero-config SMTP for testing or running in dev mode.',
+  },
+  {
+    name: 'Quarkus Antivirus',
+    logo: '/projects/antivirus.svg',
+    href: 'https://github.com/quarkiverse/quarkus-antivirus',
+    description:
+      'A Quarkus extension that enables file scanning for viruses with its adaptable engine architecture. Pre-configured to support ClamAV and VirusTotal.',
+  },
+  {
+    name: 'Orval',
+    logo: '/projects/orval.svg',
+    href: 'https://github.com/anymaniax/orval',
+    description:
+      'Able to generate clients with appropriate type-signatures (TypeScript) from any valid OpenAPI v3 or Swagger v2 specification in yaml or json formats.',
+  },
+];
+---
+
+<BaseLayout title="Projects" description="Open source projects that Melloware actively contributes to.">
+  <h1>Open Source Projects</h1>
+  <p class="subtitle">Projects in which I have been actively involved in various capacities.</p>
+
+  <ul class="project-list">
+    {projects.map(p => (
+      <li class="project-item">
+        <a href={p.href} class="project-logo" target="_blank" rel="noopener noreferrer">
+          <img src={p.logo} alt={p.name} height="36" />
+        </a>
+        <div class="project-content">
+          <a href={p.href} class="project-name" target="_blank" rel="noopener noreferrer">
+            {p.name}
+          </a>
+          <p>{p.description}</p>
+        </div>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: 0.35rem;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .project-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .project-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .project-item:last-child {
+    border-bottom: none;
+  }
+
+  .project-logo {
+    flex-shrink: 0;
+    width: 100px;
+    display: flex;
+    align-items: center;
+  }
+
+  .project-logo img {
+    max-width: 100px;
+    height: 36px;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  .project-content {
+    flex: 1;
+  }
+
+  .project-name {
+    display: block;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+    color: var(--text);
+  }
+
+  .project-name:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .project-content p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.6;
+  }
+</style>

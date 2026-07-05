@@ -1,0 +1,17 @@
+
+export default new Map([
+["src/content/blog/gatsby-redesign/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fgatsby-redesign%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/git-fifa-card-2026/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fgit-fifa-card-2026%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/git-wrapped-2025/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fgit-wrapped-2025%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/jakarta-ee-upgrade/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fjakarta-ee-upgrade%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/primefaces-14-0-0/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fprimefaces-14-0-0%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/primefaces-selectonebutton/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fprimefaces-selectonebutton%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/quarkiverse-antivirus-icap/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fquarkiverse-antivirus-icap%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/quarkus-faces-uberjar/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fquarkus-faces-uberjar%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/quarkus-faces/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fquarkus-faces%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/quarkus-insights-140/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fquarkus-insights-140%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/quarkus-insights-165/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fquarkus-insights-165%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/quarkus-insights-172/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fquarkus-insights-172%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/quarkus-insights-176/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fquarkus-insights-176%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/blog/quarkus-insights-183/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fblog%2Fquarkus-insights-183%2Findex.mdx&astroContentModuleFlag=true")]]);
+		

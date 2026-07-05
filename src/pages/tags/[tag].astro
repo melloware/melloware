@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const tags = new Set(posts.flatMap(post => post.data.tags.map(t => t.toLowerCase())));
+
+  return [...tags].map(tag => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter(post => post.data.tags.map(t => t.toLowerCase()).includes(tag))
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+
+function slugFromId(id: string): string {
+  return id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
+}
+---
+
+<BaseLayout title={`Posts tagged "${tag}"`}>
+  <h1>
+    <span class="label">Tag:</span> {tag}
+  </h1>
+  <p class="subtitle">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
+  {posts.map(post => (
+    <PostCard
+      title={post.data.title}
+      date={post.data.date}
+      tags={post.data.tags}
+      slug={slugFromId(post.id)}
+      description={post.data.description}
+    />
+  ))}
+  <div class="back">
+    <a href="/tags/">&larr; All tags</a>
+  </div>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: 0.35rem;
+    text-transform: capitalize;
+  }
+
+  .label {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 0.85em;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .back {
+    margin-top: 2rem;
+  }
+
+  .back a {
+    font-size: 0.9rem;
+  }
+</style>

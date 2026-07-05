@@ -1,0 +1,92 @@
+---
+const navLinks = [
+  { href: '/blog/', label: 'Blog' },
+  { href: '/projects/', label: 'Projects' },
+  { href: '/downloads/', label: 'Downloads' },
+  { href: '/about/', label: 'About' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" class="logo" aria-label="Melloware home">
+      <img src="/logos/svg/logo-no-background.svg" alt="Melloware" width="140" height="75" />
+    </a>
+    <nav aria-label="Main navigation">
+      <ul>
+        {navLinks.map(link => (
+          <li>
+            <a
+              href={link.href}
+              class={currentPath.startsWith(link.href) ? 'active' : ''}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    background-color: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .header-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .logo img {
+    height: 75px;
+    width: auto;
+  }
+
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  nav a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.35rem 0.6rem;
+    border-radius: 5px;
+    transition: color 0.15s, background-color 0.15s;
+  }
+
+  nav a:hover,
+  nav a.active {
+    color: var(--text);
+    background-color: var(--bg-secondary);
+    text-decoration: none;
+  }
+
+  nav a.active {
+    color: var(--accent);
+  }
+</style>

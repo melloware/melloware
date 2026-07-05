@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const posts = await getCollection('blog');
+
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title="Tags" description="All tags used in Melloware blog posts.">
+  <h1>Tags</h1>
+  <ul class="tag-list">
+    {tags.map(([tag, count]) => (
+      <li>
+        <a href={`/tags/${tag.toLowerCase()}/`} class="tag">
+          {tag}
+          <span class="count">{count}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .tag-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 99px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+</style>

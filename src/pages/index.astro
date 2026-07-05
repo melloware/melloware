@@ -1,0 +1,143 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PostCard from '@/components/PostCard.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+function slugFromId(id: string): string {
+  return id.replace(/\/index\.(md|mdx)$/, '').replace(/\.(md|mdx)$/, '');
+}
+---
+
+<BaseLayout title="Melloware">
+  <section class="hero">
+    <h1>Open Source Champion</h1>
+    <p>
+      I have a strong enthusiasm for open source initiatives and contributing to the community.
+      The majority of the projects I volunteer my time for are ones I employ in real-world
+      applications, and I'm dedicated to ensuring their longevity and prosperity.
+    </p>
+    <div class="badges">
+      <img src="https://img.shields.io/badge/java-%23323330.svg?style=flat-square&logo=eclipse&logoColor=%23CF9FFF" alt="Java" />
+      <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=flat-square&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript" />
+      <img src="https://img.shields.io/badge/typescript-%23323330.svg?style=flat-square&logo=typescript&logoColor=%23F7DF1E" alt="TypeScript" />
+      <img src="https://img.shields.io/badge/quarkus-power-blue?logo=quarkus&style=flat-square" alt="Quarkus" />
+      <img src="https://img.shields.io/badge/react-%2361DAFB.svg?style=flat-square&logo=react&logoColor=%2320232a" alt="React" />
+    </div>
+    <div class="hero-links">
+      <a href="https://github.com/melloware" class="btn-outline">GitHub</a>
+      <a href="https://github.com/sponsors/melloware" class="btn-accent">Sponsor</a>
+    </div>
+  </section>
+
+  <section class="recent-posts">
+    <h2>Recent Posts</h2>
+    {posts.slice(0, 5).map(post => (
+      <PostCard
+        title={post.data.title}
+        date={post.data.date}
+        tags={post.data.tags}
+        slug={slugFromId(post.id)}
+        description={post.data.description}
+      />
+    ))}
+    {posts.length > 5 && (
+      <div class="view-all">
+        <a href="/blog/">View all {posts.length} posts &rarr;</a>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 3rem 0 2.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 580px;
+    margin-bottom: 1.25rem;
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-outline,
+  .btn-accent {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: transparent;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .btn-accent {
+    background-color: var(--accent);
+    color: #fff;
+    border: 1px solid transparent;
+  }
+
+  .btn-accent:hover {
+    background-color: var(--accent-hover);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .recent-posts h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+  }
+
+  .view-all {
+    padding-top: 1.5rem;
+    text-align: center;
+  }
+
+  .view-all a {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+</style>
