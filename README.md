@@ -1,4 +1,4 @@
-![Melloware Logo](https://www.melloware.com/_astro/melloware-gitfut.Bi-lEvAs_PY0yz.webp)
+![Melloware Logo](https://www.melloware.com/logos/svg/logo-no-background.svg)
 ## Reputation
 [![Stack Overflow](https://img.shields.io/stackexchange/stackoverflow/r/502366?style=for-the-badge)](https://stackoverflow.com/users/502366/melloware)
 [![GitHub](https://img.shields.io/github/followers/melloware?style=for-the-badge)](https://github.com/melloware)
